@@ -1,14 +1,16 @@
 const express = require('express');
 const nextJS = require('next');
 const dbConnect = require('./utils/dbConnect');
+
 async function start() {
   const dev = process.env.NODE_ENV !== 'production';
   const app = nextJS({ dev });
   const server = express();
   await app.prepare();
 
-  // db connect
   dbConnect();
+  // db connect
+  server.use(express.json({ extended: false }));
 
   const users = require('./routes/users');
   const posts = require('./routes/posts');
@@ -17,6 +19,8 @@ async function start() {
   server.use('/api/users', users);
   server.use('/api/profile', profile);
   server.use('/api/posts', posts);
+
+  // body parser
 
   // Redirect all requests to main entrypoint pages/index.js
   server.get('/*', async (req, res, next) => {
