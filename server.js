@@ -8,8 +8,10 @@ async function start() {
   const server = express();
   await app.prepare();
 
-  dbConnect();
   // db connect
+  dbConnect();
+
+  // body parser
   server.use(express.json({ extended: false }));
 
   const users = require('./routes/users');
@@ -19,8 +21,6 @@ async function start() {
   server.use('/api/users', users);
   server.use('/api/profile', profile);
   server.use('/api/posts', posts);
-
-  // body parser
 
   // Redirect all requests to main entrypoint pages/index.js
   server.get('/*', async (req, res, next) => {

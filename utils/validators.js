@@ -1,13 +1,10 @@
 const validator = require('validator');
 
-const isEmpty = (value) => {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (typeof value === 'string' && value.trim().length === 0)
-  );
-};
+const isEmpty = (value) =>
+  value === undefined ||
+  value === null ||
+  (typeof value === 'object' && Object.keys(value).length === 0) ||
+  (typeof value === 'string' && value.trim().length === 0);
 
 // register validation
 const validateRegisterInput = (data) => {
@@ -77,4 +74,125 @@ const validateLoginInput = (data) => {
   };
 };
 
-module.exports = { validateRegisterInput, validateLoginInput };
+// profile validation
+const validateProfileInput = (data) => {
+  let errors = {};
+
+  data.handle = !isEmpty(data.handle) ? data.handle : '';
+  data.status = !isEmpty(data.status) ? data.status : '';
+  data.skills = !isEmpty(data.skills) ? data.skills : '';
+
+  if (!validator.isLength(data.handle, { min: 2, max: 40 })) {
+    errors.handle = 'Handle needs to between 2 and 4 characters';
+  }
+
+  if (validator.isEmpty(data.handle)) {
+    errors.handle = 'Profile handle is required';
+  }
+
+  if (validator.isEmpty(data.status)) {
+    errors.status = 'Status field is required';
+  }
+
+  if (validator.isEmpty(data.skills)) {
+    errors.skills = 'Skills field is required';
+  }
+
+  if (!validator.isURL(data.website)) {
+    errors.website = 'Not a valid URL';
+  }
+
+  if (!validator.isURL(data.twitter)) {
+    errors.twitter = 'Not a valid URL';
+  }
+
+  if (!validator.isURL(data.facebook)) {
+    errors.facebook = 'Not a valid URL';
+  }
+
+  if (data.youtube) {
+    if (!validator.isURL(data.youtube)) {
+      errors.youtube = 'Not a valid URL';
+    }
+  }
+  if (data.linkedin) {
+    if (!validator.isURL(data.linkedin)) {
+      errors.linkedin = 'Not a valid URL';
+    }
+  }
+  if (data.instagram) {
+    if (!validator.isURL(data.instagram)) {
+      errors.instagram = 'Not a valid URL';
+    }
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+// experience validation
+const validateExpInput = (data) => {
+  let errors = {};
+
+  data.title = !isEmpty(data.title) ? data.title : '';
+  data.company = !isEmpty(data.company) ? data.company : '';
+  data.from = !isEmpty(data.from) ? data.from : '';
+
+  if (validator.isEmpty(data.title)) {
+    errors.title = 'Job title is required';
+  }
+
+  if (validator.isEmpty(data.company)) {
+    errors.company = 'Company field is required';
+  }
+
+  if (validator.isEmpty(data.from)) {
+    errors.from = 'From date field is required';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+// education validation
+const validateEduInput = (data) => {
+  let errors = {};
+
+  data.school = !isEmpty(data.school) ? data.school : '';
+  data.degree = !isEmpty(data.degree) ? data.degree : '';
+  data.fieldofstudy = !isEmpty(data.fieldofstudy) ? data.fieldofstudy : '';
+  data.from = !isEmpty(data.from) ? data.from : '';
+
+  if (validator.isEmpty(data.school)) {
+    errors.school = 'School field is required';
+  }
+
+  if (validator.isEmpty(data.degree)) {
+    errors.degree = 'Degree field is required';
+  }
+
+  if (validator.isEmpty(data.fieldofstudy)) {
+    errors.fieldofstudy = 'Field of study field is required';
+  }
+
+  if (validator.isEmpty(data.from)) {
+    errors.from = 'From date field is required';
+  }
+
+  return {
+    errors,
+    isValid: isEmpty(errors),
+  };
+};
+
+module.exports = {
+  validateRegisterInput,
+  validateLoginInput,
+  validateProfileInput,
+  validateExpInput,
+  validateEduInput,
+};
