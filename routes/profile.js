@@ -285,4 +285,19 @@ router.post('/education', authUser, async (req, res) => {
   }
 });
 
+// delete profile and user
+router.delete('/', authUser, async (req, res) => {
+  try {
+    const deletedProfile = await Profile.findOneAndRemove({
+      user: req.user.id,
+    });
+
+    const deletedUser = await User.findOneAndRemove({ _id: req.user.id });
+    console.log(deletedProfile, deletedUser);
+    res.status(200).json({ msg: 'Profile and User deleted' });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = router;
