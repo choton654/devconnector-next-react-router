@@ -1,7 +1,9 @@
-import Axios from 'axios';
 import classNames from 'classnames';
-import React, { useState } from 'react';
-function Register() {
+import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import { AuthState } from '../../context/states/authContext';
+
+function Register(props) {
   const [state, setstate] = useState({
     name: '',
     email: '',
@@ -10,9 +12,22 @@ function Register() {
     errors: {},
   });
 
+  const {
+    state: { errors },
+    registerUser,
+  } = AuthState();
+
+  useEffect(() => {
+    if (errors) {
+      setstate({
+        ...state,
+        errors: errors,
+      });
+    }
+  }, [errors]);
+
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(state);
     const newUser = {
       name: state.name,
       email: state.email,
@@ -20,9 +35,7 @@ function Register() {
       password2: state.password2,
     };
 
-    Axios.post('/api/users/register', newUser)
-      .then((res) => console.log(res.data))
-      .catch((err) => setstate({ errors: err.response.data }));
+    registerUser(newUser, props.history);
   };
 
   const onChange = (e) => {
@@ -48,7 +61,7 @@ function Register() {
                   })}
                   placeholder='Name'
                   name='name'
-                  value={state.name || ''}
+                  value={state.name}
                   onChange={onChange}
                 />
                 {state.errors.name && (
@@ -118,4 +131,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default withRouter(Register);

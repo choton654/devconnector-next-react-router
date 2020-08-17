@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
+import { AuthState } from '../../context/states/authContext';
 
 function Login() {
   const [state, setstate] = useState({
     email: '',
     password: '',
-    error: {},
+    errors: {},
   });
+
+  const {
+    state: { errors },
+    loginUser,
+  } = AuthState();
+
+  useEffect(() => {
+    if (errors) {
+      setstate({
+        ...state,
+        errors: errors,
+      });
+    }
+  }, [errors]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(state);
+    loginUser({ email: state.email, password: state.password });
   };
 
   const onChange = (e) => {
@@ -31,22 +47,34 @@ function Login() {
               <div className='form-group'>
                 <input
                   type='email'
-                  className='form-control form-control-lg'
+                  className={classNames('form-control form-control-lg', {
+                    'is-invalid': state.errors.email,
+                  })}
                   placeholder='Email Address'
                   name='email'
                   value={state.email}
                   onChange={onChange}
                 />
+                {state.errors.email && (
+                  <div className='invalid-feedback'>{state.errors.email}</div>
+                )}
               </div>
               <div className='form-group'>
                 <input
                   type='password'
-                  className='form-control form-control-lg'
+                  className={classNames('form-control form-control-lg', {
+                    'is-invalid': state.errors.password,
+                  })}
                   placeholder='Password'
                   name='password'
                   value={state.password}
                   onChange={onChange}
                 />
+                {state.errors.password && (
+                  <div className='invalid-feedback'>
+                    {state.errors.password}
+                  </div>
+                )}
               </div>
               <input type='submit' className='btn btn-info btn-block mt-4' />
             </form>

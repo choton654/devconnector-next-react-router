@@ -2,6 +2,8 @@ import { Redirect } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
+import Layout from '../components/Layout';
+import { AuthProvider } from '../context/states/authContext';
 import About from './About';
 import Home from './Home';
 import Users from './Users';
@@ -28,15 +30,19 @@ function NotFound() {
 function App() {
   return (
     <div>
-      <Switch>
-        <Route path='/' exact component={Home} />
-        <Route exact path='/about/' component={About} />
-        <Route exact path='/users/' component={Users} />
-        <Route exact path='/login/' component={Login} />
-        <Route exact path='/register/' component={Register} />
-        <Redirect from='/people/' to='/users/' />
-        <Route component={NotFound} />
-      </Switch>
+      <Layout>
+        <AuthProvider>
+          <Switch>
+            <Route path='/' exact component={Home} />
+            <Route exact path='/about/' component={About} />
+            <Route exact path='/users/' component={Users} />
+            <Route exact path='/login/' component={Login} />
+            <Route exact path='/register/' component={Register} />
+            <Redirect from='/people/' to='/users/' />
+            <Route component={NotFound} />
+          </Switch>
+        </AuthProvider>
+      </Layout>
     </div>
   );
 }

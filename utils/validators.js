@@ -210,6 +210,7 @@ const validatePostInput = (data) => {
 };
 
 module.exports = {
+  isEmpty,
   validateRegisterInput,
   validateLoginInput,
   validateProfileInput,
