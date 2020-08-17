@@ -1,6 +1,7 @@
-// import Link from 'next/link';
 import { Redirect } from 'react-router';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
 import About from './About';
 import Home from './Home';
 import Users from './Users';
@@ -27,28 +28,12 @@ function NotFound() {
 function App() {
   return (
     <div>
-      <h1>Welcome to Next.js!</h1>
-      <nav>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/about/'>About</Link>
-          </li>
-          <li>
-            <Link to='/users/'>Users</Link>
-          </li>
-          <li>
-            <Link to='/people/'>People</Link>
-          </li>
-        </ul>
-      </nav>
-
       <Switch>
         <Route path='/' exact component={Home} />
-        <Route path='/about/' component={About} />
-        <Route path='/users/' component={Users} />
+        <Route exact path='/about/' component={About} />
+        <Route exact path='/users/' component={Users} />
+        <Route exact path='/login/' component={Login} />
+        <Route exact path='/register/' component={Register} />
         <Redirect from='/people/' to='/users/' />
         <Route component={NotFound} />
       </Switch>
