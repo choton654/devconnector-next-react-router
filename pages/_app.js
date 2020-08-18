@@ -1,22 +1,16 @@
 import App from 'next/app';
 import React from 'react';
-import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import '../App.css';
+import Layout from '../components/Layout';
+import { AuthProvider } from '../context/states/authContext';
 
-const isServer = typeof window === 'undefined';
-
-function MyApp({ Component, pageProps, router }) {
-  if (isServer) {
-    return (
-      <StaticRouter location={router.asPath}>
-        <Component {...pageProps} />
-      </StaticRouter>
-    );
-  }
+function MyApp({ Component, pageProps }) {
   return (
-    <BrowserRouter>
-      <Component {...pageProps} />
-    </BrowserRouter>
+    <AuthProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </AuthProvider>
   );
 }
 
@@ -31,3 +25,22 @@ MyApp.getInitialProps = async (appContext) => {
 };
 
 export default MyApp;
+
+// import { BrowserRouter, StaticRouter } from 'react-router-dom';
+// const isServer = typeof window === 'undefined';
+
+// function MyApp({ Component, pageProps, router }) {
+//   if (isServer) {
+//     return (
+//       <StaticRouter location={router.asPath}>
+//         <Component {...pageProps} />
+//       </StaticRouter>
+//     );
+//   } else {
+//     return (
+//       <BrowserRouter>
+//         <Component {...pageProps} />
+//       </BrowserRouter>
+//     );
+//   }
+// }

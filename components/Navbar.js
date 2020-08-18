@@ -1,14 +1,20 @@
+import Link from 'next/link';
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { AuthState } from '../context/states/authContext';
 
 function Navbar() {
+  const {
+    state: { isAuthenticated, user },
+    logoutUser,
+  } = AuthState();
+
   return (
     <nav className='navbar navbar-expand-sm navbar-dark bg-dark mb-4'>
       <div className='container'>
-        <Link to='/' className='navbar-brand'>
-          DevConnector
+        <Link href='/'>
+          <a className='navbar-brand'>DevConnector</a>
         </Link>
-
         <button
           className='navbar-toggler'
           type='button'
@@ -16,7 +22,6 @@ function Navbar() {
           data-target='#mobile-nav'>
           <span className='navbar-toggler-icon'></span>
         </button>
-
         <div className='collapse navbar-collapse' id='mobile-nav'>
           <ul className='navbar-nav mr-auto'>
             <li className='nav-item'>
@@ -25,33 +30,48 @@ function Navbar() {
               </a>
             </li>
           </ul>
-          <ul className='navbar-nav ml-auto'>
-            <li className='nav-item'>
-              <Link to='/register' className='nav-link'>
-                Sign up
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/login' className='nav-link'>
-                Login
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/about' className='nav-link'>
-                About
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/users' className='nav-link'>
-                Users
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/people' className='nav-link'>
-                People
-              </Link>
-            </li>
-          </ul>
+          {isAuthenticated ? (
+            <ul className='navbar-nav ml-auto'>
+              <li className='nav-item'>
+                <a href='#' className='nav-link' onClick={logoutUser}>
+                  <img
+                    className='rounded-circle'
+                    style={{
+                      width: '25px',
+                      marginRight: '5px',
+                    }}
+                    src={user.avatar}
+                    alt={user.name}
+                    title='You must have a gravatar connect to your email'
+                  />
+                  Logout
+                </a>
+              </li>
+              <li className='nav-item'>
+                <Link href='/About'>
+                  <a className='nav-link'>About</a>
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link href='/Users'>
+                  <a className='nav-link'>Users</a>
+                </Link>
+              </li>
+            </ul>
+          ) : (
+            <ul className='navbar-nav ml-auto'>
+              <li className='nav-item'>
+                <Link href='/Register'>
+                  <a className='nav-link'>Sign up</a>
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link href='/Login'>
+                  <a className='nav-link'>Login</a>
+                </Link>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </nav>
