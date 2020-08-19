@@ -1,4 +1,3 @@
-import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import TextFieldGroup from '../components/TextFieldGroup';
 import { AuthState } from '../context/states/authContext';
@@ -21,9 +20,9 @@ function Login() {
         errors: errors,
       });
     }
-    if (isAuthenticated) {
-      router.push('/Users');
-    }
+    // if (isAuthenticated) {
+    //   router.push('/users');
+    // }
   }, [errors, isAuthenticated]);
 
   const onSubmit = (e) => {

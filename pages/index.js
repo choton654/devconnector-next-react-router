@@ -10,7 +10,7 @@ function Home(props) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/Users');
+      router.push('/users');
     }
   }, [isAuthenticated]);
 
@@ -26,10 +26,10 @@ function Home(props) {
                 from other developers
               </p>
               <hr />
-              <Link href='/Register'>
+              <Link href='/register'>
                 <a className='btn btn-lg btn-info mr-2'>Sign Up</a>
               </Link>
-              <Link href='/Login'>
+              <Link href='/login'>
                 <a className='btn btn-lg btn-light'>Login</a>
               </Link>
             </div>
@@ -41,56 +41,3 @@ function Home(props) {
 }
 
 export default Home;
-
-// import { Redirect } from 'react-router';
-// import { Route, Switch } from 'react-router-dom';
-// import Login from '../components/auth/Login';
-// import Register from '../components/auth/Register';
-// import Layout from '../components/Layout';
-// import { AuthProvider } from '../context/states/authContext';
-// import About from './About';
-// import Home from './Home';
-// import { Link } from 'react-router-dom';
-// import Users from './Users';
-
-// function Status({ code, children }) {
-//   return (
-//     <Route
-//       render={({ staticContext }) => {
-//         if (staticContext) staticContext.status = code;
-//         return children;
-//       }}
-//     />
-//   );
-// }
-
-// function NotFound() {
-//   return (
-//     <>
-//       <Status code={404} />
-//       <h2>Not found</h2>;
-//     </>
-//   );
-// }
-
-// function App() {
-//   return (
-//     <div>
-//       <AuthProvider>
-//         <Layout>
-//           <Switch>
-//             <Route path='/' exact component={Home} />
-//             <Route exact path='/about/' component={About} />
-//             <Route exact path='/dashboard/' component={Users} />
-//             <Route exact path='/login/' component={Login} />
-//             <Route exact path='/register/' component={Register} />
-//             <Redirect from='/people/' to='/dashboard/' />
-//             <Route component={NotFound} />
-//           </Switch>
-//         </Layout>
-//       </AuthProvider>
-//     </div>
-//   );
-// }
-
-// export default App;

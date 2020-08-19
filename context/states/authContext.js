@@ -1,33 +1,30 @@
 import Axios from 'axios';
+import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
 import router from 'next/router';
 import { createContext, useContext, useReducer } from 'react';
+import appState from '../../utils/appState';
 import authReducer from '../reducers/authReducer';
-import { CLEAR_ERRORS, GET_ERRORS, SET_CURRENT_USER } from '../types';
+import {
+  CLEAR_ERRORS,
+  GET_ERRORS,
+  GET_PROFILE,
+  PROFILE_LOADING,
+  SET_CURRENT_USER,
+} from '../types';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  let token, decode;
-
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem('token');
-    if (token) {
-      decode = jwt_decode(token);
-      Axios.defaults.headers.common['Authorization'] = token;
-      const currentTime = Date.now() / 1000;
-      if (decode.exp < currentTime) {
-        decode = {};
-        token = null;
-        window.location.href = '/login';
-      }
-    }
-  }
+  const { profile, token, decode } = appState();
 
   const initialState = {
     token: token,
     isAuthenticated: decode ? true : false,
-    user: decode ? decode : {},
+    user: decode || {},
+    profile: profile || {},
+    profiles: [],
+    loading: false,
     errors: {},
   };
 
@@ -49,19 +46,60 @@ export const AuthProvider = ({ children }) => {
         data: { token },
       } = await Axios.post('/api/users/login', userData);
       const decode = jwt_decode(token);
-      localStorage.setItem('token', token);
+      Cookies.set('token', token);
       setAuthToken(token);
       setUser(decode);
       dispatch({ type: CLEAR_ERRORS });
+      router.push('/users');
     } catch (error) {
       dispatch({ type: GET_ERRORS, payload: error.response.data });
     }
   };
 
   const logoutUser = () => {
-    localStorage.removeItem('token');
+    Cookies.remove('token');
     setAuthToken(false);
     setUser({});
+    window.location.href = '/login';
+  };
+
+  const getProfile = async () => {
+    try {
+      dispatch({ type: PROFILE_LOADING });
+      const { data } = await Axios.get('/api/profile');
+      dispatch({ type: GET_PROFILE, payload: data });
+    } catch (error) {
+      console.error(error.response);
+      dispatch({ type: GET_PROFILE, payload: {} });
+    }
+  };
+
+  const createProfile = async (profileData) => {
+    try {
+      const { data } = await Axios.post('/api/profile', profileData);
+      console.log(data);
+      router.push('/users');
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const deleteProfile = async () => {
+    try {
+      await Axios.delete('/api/profile');
+      Cookies.remove('token');
+      setUser({});
+      dispatch({ type: GET_PROFILE, payload: {} });
+      router.push('/register');
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const setUser = (decode) => {
+    return dispatch({ type: SET_CURRENT_USER, payload: decode });
   };
 
   const setAuthToken = (token) => {
@@ -70,10 +108,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       delete Axios.defaults.headers.common['Authorization'];
     }
-  };
-
-  const setUser = (decode) => {
-    return dispatch({ type: SET_CURRENT_USER, payload: decode });
   };
 
   return (
@@ -85,6 +119,9 @@ export const AuthProvider = ({ children }) => {
         setUser,
         setAuthToken,
         logoutUser,
+        getProfile,
+        createProfile,
+        deleteProfile,
       }}>
       {children}
     </AuthContext.Provider>

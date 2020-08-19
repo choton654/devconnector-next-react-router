@@ -25,7 +25,7 @@ function Register(props) {
       });
     }
     if (isAuthenticated) {
-      router.push('/Users');
+      router.push('/users');
     }
   }, [errors, isAuthenticated]);
 

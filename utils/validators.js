@@ -98,16 +98,22 @@ const validateProfileInput = (data) => {
     errors.skills = 'Skills field is required';
   }
 
-  if (!validator.isURL(data.website)) {
-    errors.website = 'Not a valid URL';
+  if (data.website) {
+    if (!validator.isURL(data.website)) {
+      errors.website = 'Not a valid URL';
+    }
   }
 
-  if (!validator.isURL(data.twitter)) {
-    errors.twitter = 'Not a valid URL';
+  if (data.twitter) {
+    if (!validator.isURL(data.twitter)) {
+      errors.twitter = 'Not a valid URL';
+    }
   }
 
-  if (!validator.isURL(data.facebook)) {
-    errors.facebook = 'Not a valid URL';
+  if (data.facebook) {
+    if (!validator.isURL(data.facebook)) {
+      errors.facebook = 'Not a valid URL';
+    }
   }
 
   if (data.youtube) {

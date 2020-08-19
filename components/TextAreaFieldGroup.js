@@ -1,26 +1,22 @@
 import classNames from 'classnames';
 import React from 'react';
 
-function TextFieldGroup({
-  type,
+function TextAreaFieldGroup({
   placeholder,
   name,
   value,
   onChange,
   error,
   info,
-  disabled,
 }) {
   return (
     <div className='form-group'>
-      <input
-        type={type}
+      <textarea
         className={classNames('form-control form-control-lg', {
           'is-invalid': error,
         })}
         placeholder={placeholder}
         name={name}
-        disabled={disabled}
         value={value}
         onChange={onChange}
       />
@@ -30,4 +26,4 @@ function TextFieldGroup({
   );
 }
 
-export default TextFieldGroup;
+export default TextAreaFieldGroup;

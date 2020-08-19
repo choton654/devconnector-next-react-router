@@ -33,7 +33,7 @@ function Navbar() {
           {isAuthenticated ? (
             <ul className='navbar-nav ml-auto'>
               <li className='nav-item'>
-                <a href='#' className='nav-link' onClick={logoutUser}>
+                <a className='nav-link' onClick={logoutUser}>
                   <img
                     className='rounded-circle'
                     style={{
@@ -42,7 +42,6 @@ function Navbar() {
                     }}
                     src={user.avatar}
                     alt={user.name}
-                    title='You must have a gravatar connect to your email'
                   />
                   Logout
                 </a>
@@ -53,7 +52,7 @@ function Navbar() {
                 </Link>
               </li>
               <li className='nav-item'>
-                <Link href='/Users'>
+                <Link href='/users'>
                   <a className='nav-link'>Users</a>
                 </Link>
               </li>
@@ -61,12 +60,12 @@ function Navbar() {
           ) : (
             <ul className='navbar-nav ml-auto'>
               <li className='nav-item'>
-                <Link href='/Register'>
+                <Link href='/register'>
                   <a className='nav-link'>Sign up</a>
                 </Link>
               </li>
               <li className='nav-item'>
-                <Link href='/Login'>
+                <Link href='/login'>
                   <a className='nav-link'>Login</a>
                 </Link>
               </li>
