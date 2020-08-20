@@ -36,7 +36,7 @@ export default function Users({ authUser }) {
         <div>
           <p className='lead text-muted'>
             Welcome{' '}
-            <Link href={`/profile/${profile.handle}`}>
+            <Link href={`/profile?handle=${profile.handle}`}>
               <a>{user.name}</a>
             </Link>
           </p>

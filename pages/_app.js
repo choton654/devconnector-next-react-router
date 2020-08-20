@@ -64,7 +64,9 @@ MyApp.getInitialProps = async (appContext) => {
       ctx.pathname === '/createProfile' ||
       ctx.pathname === '/editProfile' ||
       ctx.pathname === '/addEducation' ||
-      ctx.pathname === '/addExperience';
+      ctx.pathname === '/addExperience' ||
+      ctx.pathname === '/profile' ||
+      ctx.pathname === '/profiles';
 
     if (protectRoute) {
       redirectUser(ctx, '/login');

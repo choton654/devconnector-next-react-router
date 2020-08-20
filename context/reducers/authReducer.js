@@ -3,6 +3,7 @@ import {
   CLEAR_ERRORS,
   GET_ERRORS,
   GET_PROFILE,
+  GET_PROFILES,
   PROFILE_LOADING,
   SET_CURRENT_USER,
   SET_TOKEN,
@@ -35,6 +36,12 @@ export default function authReducer(state, action) {
       return {
         ...state,
         profile: action.payload,
+        loading: false,
+      };
+    case GET_PROFILES:
+      return {
+        ...state,
+        profiles: action.payload,
         loading: false,
       };
     case PROFILE_LOADING:

@@ -9,6 +9,7 @@ import {
   CLEAR_ERRORS,
   GET_ERRORS,
   GET_PROFILE,
+  GET_PROFILES,
   PROFILE_LOADING,
   SET_CURRENT_USER,
   SET_TOKEN,
@@ -157,6 +158,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getProfiles = async () => {
+    try {
+      dispatch({ type: PROFILE_LOADING });
+      const { data } = await Axios.get('/api/profile/all');
+      dispatch({ type: GET_PROFILES, payload: data });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -171,6 +182,7 @@ export const AuthProvider = ({ children }) => {
         addEducation,
         deleteExperience,
         deleteEducation,
+        getProfiles,
       }}>
       {children}
     </AuthContext.Provider>
