@@ -45,10 +45,10 @@ MyApp.getInitialProps = async (appContext) => {
         },
       );
       const decode = jwt_decode(token);
-      const currentTime = Date.now() / 1000;
-      if (decode.exp < currentTime) {
-        redirectUser(ctx, '/login');
-      }
+      // const currentTime = Date.now() / 1000;
+      // if (decode.exp < currentTime) {
+      //   redirectUser(ctx, '/login');
+      // }
       if (decode.id === data.id) {
         appProps.pageProps.authUser = data;
       } else {
@@ -56,10 +56,16 @@ MyApp.getInitialProps = async (appContext) => {
       }
     } catch (error) {
       console.error(error.response.data);
-      redirectUser(ctx, '/login');
+      // redirectUser(ctx, '/login');
     }
   } else {
-    const protectRoute = ctx.pathname === '/users';
+    const protectRoute =
+      ctx.pathname === '/users' ||
+      ctx.pathname === '/createProfile' ||
+      ctx.pathname === '/editProfile' ||
+      ctx.pathname === '/addEducation' ||
+      ctx.pathname === '/addExperience';
+
     if (protectRoute) {
       redirectUser(ctx, '/login');
     }

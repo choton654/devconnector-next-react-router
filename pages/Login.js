@@ -20,9 +20,6 @@ function Login() {
         errors: errors,
       });
     }
-    // if (isAuthenticated) {
-    //   router.push('/users');
-    // }
   }, [errors, isAuthenticated]);
 
   const onSubmit = (e) => {

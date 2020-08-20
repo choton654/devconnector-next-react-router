@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
-import router from 'next/router';
+import Router from 'next/router';
 import { createContext, useContext, useReducer } from 'react';
 import appState from '../../utils/appState';
 import authReducer from '../reducers/authReducer';
@@ -11,18 +11,19 @@ import {
   GET_PROFILE,
   PROFILE_LOADING,
   SET_CURRENT_USER,
+  SET_TOKEN,
 } from '../types';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { profile, token, decode } = appState();
+  const { token, decode } = appState();
 
   const initialState = {
-    token: token,
+    token: token || null,
     isAuthenticated: decode ? true : false,
     user: decode || {},
-    profile: profile || {},
+    profile: {},
     profiles: [],
     loading: false,
     errors: {},
@@ -30,12 +31,29 @@ export const AuthProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  // auth actions
+
+  const setUser = (decode) => {
+    return dispatch({ type: SET_CURRENT_USER, payload: decode });
+  };
+
+  const setAuthToken = (token) => {
+    if (token) {
+      dispatch({ type: SET_TOKEN, payload: token });
+      Axios.defaults.headers.common['Authorization'] = token;
+    } else {
+      dispatch({ type: SET_TOKEN, payload: null });
+      delete Axios.defaults.headers.common['Authorization'];
+    }
+  };
+
   const registerUser = async (userData) => {
     try {
       const { data } = await Axios.post('/api/users/register', userData);
-      router.push('/login');
+      Router.push('/login');
       dispatch({ type: CLEAR_ERRORS });
     } catch (error) {
+      console.error(error);
       dispatch({ type: GET_ERRORS, payload: error.response.data });
     }
   };
@@ -50,8 +68,9 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(token);
       setUser(decode);
       dispatch({ type: CLEAR_ERRORS });
-      router.push('/users');
+      Router.push('/users');
     } catch (error) {
+      console.error(error);
       dispatch({ type: GET_ERRORS, payload: error.response.data });
     }
   };
@@ -62,6 +81,8 @@ export const AuthProvider = ({ children }) => {
     setUser({});
     window.location.href = '/login';
   };
+
+  // profile actions
 
   const getProfile = async () => {
     try {
@@ -78,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data } = await Axios.post('/api/profile', profileData);
       console.log(data);
-      router.push('/users');
+      Router.push('/users');
     } catch (error) {
       console.error(error);
       dispatch({ type: GET_ERRORS, payload: error.response.data });
@@ -86,27 +107,53 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteProfile = async () => {
+    if (window.confirm('Are you sure you want to delete')) {
+      try {
+        await Axios.delete('/api/profile');
+        logoutUser();
+      } catch (error) {
+        console.error(error);
+        dispatch({ type: GET_ERRORS, payload: error.response.data });
+      }
+    }
+  };
+
+  const addExperience = async (expData) => {
     try {
-      await Axios.delete('/api/profile');
-      Cookies.remove('token');
-      setUser({});
-      dispatch({ type: GET_PROFILE, payload: {} });
-      router.push('/register');
+      const { data } = await Axios.post('/api/profile/experience', expData);
+      Router.push('/users');
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+  const addEducation = async (eduData) => {
+    try {
+      const { data } = await Axios.post('/api/profile/education', eduData);
+      Router.push('/users');
+      console.log(data);
     } catch (error) {
       console.error(error);
       dispatch({ type: GET_ERRORS, payload: error.response.data });
     }
   };
 
-  const setUser = (decode) => {
-    return dispatch({ type: SET_CURRENT_USER, payload: decode });
+  const deleteExperience = async (expId) => {
+    try {
+      const { data } = await Axios.delete(`/api/profile/experience/${expId}`);
+      dispatch({ type: GET_PROFILE, payload: data });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const setAuthToken = (token) => {
-    if (token) {
-      Axios.defaults.headers.common['Authorization'] = token;
-    } else {
-      delete Axios.defaults.headers.common['Authorization'];
+  const deleteEducation = async (eduId) => {
+    try {
+      const { data } = await Axios.delete(`/api/profile/education/${eduId}`);
+      dispatch({ type: GET_PROFILE, payload: data });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -116,12 +163,14 @@ export const AuthProvider = ({ children }) => {
         state,
         registerUser,
         loginUser,
-        setUser,
-        setAuthToken,
         logoutUser,
         getProfile,
         createProfile,
         deleteProfile,
+        addExperience,
+        addEducation,
+        deleteExperience,
+        deleteEducation,
       }}>
       {children}
     </AuthContext.Provider>

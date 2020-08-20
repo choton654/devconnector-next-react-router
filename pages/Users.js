@@ -1,19 +1,17 @@
 import Link from 'next/link';
 import React, { useEffect } from 'react';
+import Education from '../components/Education';
+import Experience from '../components/Experience';
 import ProfileActions from '../components/ProfileActions';
 import { AuthState } from '../context/states/authContext';
 
 export default function Users({ authUser }) {
   console.log(authUser);
-  // const {
-  //   state: { loading, profile },
-  //   getProfile,
-  //   deleteProfile,
-  // } = ProfileState();
+
   const {
     state: { user, loading, profile },
-    getProfile,
     deleteProfile,
+    getProfile,
   } = AuthState();
 
   useEffect(() => {
@@ -43,8 +41,8 @@ export default function Users({ authUser }) {
             </Link>
           </p>
           <ProfileActions />
-          {/* <Experience experience={profile.experience} />
-          <Education education={profile.education} /> */}
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
           <div style={{ marginBottom: '60px' }} />
           <button onClick={onDeleteClick} className='btn btn-danger'>
             Delete My Account
@@ -64,5 +62,16 @@ export default function Users({ authUser }) {
     }
   }
 
-  return <div>{dashBoard}</div>;
+  return (
+    <div className='dashboard'>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-md-12'>
+            <h1 className='display-4'>Dashboard</h1>
+            {dashBoard}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

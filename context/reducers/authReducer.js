@@ -5,6 +5,7 @@ import {
   GET_PROFILE,
   PROFILE_LOADING,
   SET_CURRENT_USER,
+  SET_TOKEN,
 } from '../types';
 
 export default function authReducer(state, action) {
@@ -18,6 +19,11 @@ export default function authReducer(state, action) {
       return {
         ...state,
         errors: {},
+      };
+    case SET_TOKEN:
+      return {
+        ...state,
+        token: action.payload,
       };
     case SET_CURRENT_USER:
       return {
