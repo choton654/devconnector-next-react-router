@@ -6,8 +6,12 @@ import { createContext, useContext, useReducer } from 'react';
 import appState from '../../utils/appState';
 import authReducer from '../reducers/authReducer';
 import {
+  ADD_POST,
   CLEAR_ERRORS,
+  DELETE_POST,
   GET_ERRORS,
+  GET_POST,
+  GET_POSTS,
   GET_PROFILE,
   GET_PROFILES,
   PROFILE_LOADING,
@@ -26,6 +30,8 @@ export const AuthProvider = ({ children }) => {
     user: decode || {},
     profile: {},
     profiles: [],
+    posts: [],
+    post: {},
     loading: false,
     errors: {},
   };
@@ -168,6 +174,97 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // post actions
+
+  const addPost = async (postData) => {
+    try {
+      const { data } = await Axios.post('/api/posts', postData);
+      dispatch({ type: ADD_POST, payload: data });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const getPosts = async () => {
+    try {
+      dispatch({ type: PROFILE_LOADING });
+      const { data } = await Axios.get('/api/posts');
+      dispatch({ type: GET_POSTS, payload: data });
+      dispatch({ type: CLEAR_ERRORS });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: ADD_POST, payload: null });
+    }
+  };
+
+  const getPost = async (postId) => {
+    try {
+      dispatch({ type: PROFILE_LOADING });
+      const { data } = await Axios.get(`/api/posts/${postId}`);
+      dispatch({ type: GET_POST, payload: data });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const deletePost = async (id) => {
+    try {
+      const res = await Axios.delete(`/api/posts/${id}`);
+      dispatch({ type: DELETE_POST, payload: id });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const likePost = async (postId) => {
+    try {
+      const res = await Axios.post(`/api/posts/like/${postId}`);
+      getPosts();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const unlikePost = async (postId) => {
+    try {
+      const res = await Axios.post(`/api/posts/unlike/${postId}`);
+      getPosts();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const addComment = async (commentData, postId) => {
+    try {
+      const { data } = await Axios.post(
+        `/api/posts/comment/${postId}`,
+        commentData,
+      );
+      dispatch({ type: CLEAR_ERRORS });
+      getPost(postId);
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
+  const deleteComment = async (postId, commentId) => {
+    try {
+      const { data } = await Axios.delete(
+        `/api/posts/comment/${postId}/${commentId}`,
+      );
+      getPost(postId);
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: GET_ERRORS, payload: error.response.data });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -183,6 +280,14 @@ export const AuthProvider = ({ children }) => {
         deleteExperience,
         deleteEducation,
         getProfiles,
+        addPost,
+        getPosts,
+        deletePost,
+        likePost,
+        unlikePost,
+        getPost,
+        addComment,
+        deleteComment,
       }}>
       {children}
     </AuthContext.Provider>

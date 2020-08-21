@@ -53,7 +53,12 @@ function Navbar() {
               </li>
               <li className='nav-item'>
                 <Link href='/users'>
-                  <a className='nav-link'>Users</a>
+                  <a className='nav-link'>Dashboard</a>
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link href='/posts'>
+                  <a className='nav-link'>Post Feed</a>
                 </Link>
               </li>
             </ul>

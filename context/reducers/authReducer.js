@@ -1,7 +1,11 @@
 import { isEmpty } from '../../utils/validators';
 import {
+  ADD_POST,
   CLEAR_ERRORS,
+  DELETE_POST,
   GET_ERRORS,
+  GET_POST,
+  GET_POSTS,
   GET_PROFILE,
   GET_PROFILES,
   PROFILE_LOADING,
@@ -48,6 +52,28 @@ export default function authReducer(state, action) {
       return {
         ...state,
         loading: true,
+      };
+    case ADD_POST:
+      return {
+        ...state,
+        posts: [action.payload, ...state.posts],
+      };
+    case GET_POSTS:
+      return {
+        ...state,
+        posts: action.payload,
+        loading: false,
+      };
+    case GET_POST:
+      return {
+        ...state,
+        post: action.payload,
+        loading: false,
+      };
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post._id !== action.payload),
       };
     default:
       return state;
