@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import React from 'react';
-// import { Link } from 'react-router-dom';
 import { AuthState } from '../context/states/authContext';
 
 function Navbar() {
@@ -25,9 +24,9 @@ function Navbar() {
         <div className='collapse navbar-collapse' id='mobile-nav'>
           <ul className='navbar-nav mr-auto'>
             <li className='nav-item'>
-              <a className='nav-link' href='#'>
-                {user.name}
-              </a>
+              <Link href='/users'>
+                <a className='nav-link'>{user.name}</a>
+              </Link>
             </li>
           </ul>
           {isAuthenticated ? (
@@ -47,8 +46,8 @@ function Navbar() {
                 </a>
               </li>
               <li className='nav-item'>
-                <Link href='/About'>
-                  <a className='nav-link'>About</a>
+                <Link href='/profiles'>
+                  <a className='nav-link'>Profiles</a>
                 </Link>
               </li>
               <li className='nav-item'>
