@@ -5,6 +5,7 @@ const Cors = require("cors");
 
 async function start() {
   const dev = process.env.NODE_ENV !== "production";
+  const port = process.env.PORT || 3000;
   const app = nextJS({ dev });
   const handle = app.getRequestHandler();
   const server = express();
@@ -28,8 +29,6 @@ async function start() {
   server.all("*", (req, res) => {
     return handle(req, res);
   });
-
-  const port = process.env.PORT || 3000;
 
   server.listen(port, (err) => {
     if (err) throw err;

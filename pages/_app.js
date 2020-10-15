@@ -40,8 +40,7 @@ MyApp.getInitialProps = async (appContext) => {
     try {
       const { data } = await Axios.get(
         "http://localhost:3000/api/users/current" ||
-          `https://devconnector-next-react-router.vercel.app/api/users/current` ||
-          `https://rocky-crag-53197.herokuapp.com/api/users/current`,
+          "https://devconector-nextjs.choton654.vercel.app/api/users/current",
         {
           headers: { Authorization: token },
         }
