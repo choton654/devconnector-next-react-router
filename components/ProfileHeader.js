@@ -10,13 +10,13 @@ function ProfileHeader({ profile }) {
             <div className='col-4 col-md-3 m-auto'>
               <img
                 className='rounded-circle'
-                src={profile.user.avatar}
+                src={profile.user?.avatar}
                 alt=''
               />
             </div>
           </div>
           <div className='text-center'>
-            <h1 className='display-4 text-center'>{profile.user.name}</h1>
+            <h1 className='display-4 text-center'>{profile.user?.name}</h1>
             <p className='lead text-center'>
               {profile.status}{' '}
               {isEmpty(profile.company) ? null : (

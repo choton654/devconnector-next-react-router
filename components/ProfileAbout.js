@@ -3,7 +3,7 @@ import { isEmpty } from '../utils/validators';
 
 function ProfileAbout({ profile }) {
   // Get first name
-  const firstName = profile.user.name.trim().split(' ')[0];
+  const firstName = profile.user?.name.trim().split(' ')[0];
 
   // Skill List
   const skills = profile.skills.map((skill, index) => (

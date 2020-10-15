@@ -1,11 +1,11 @@
-import Axios from 'axios';
-import cookie from 'cookie';
-import jwt_decode from 'jwt-decode';
-import App from 'next/app';
-import React from 'react';
-import '../App.css';
-import Layout from '../components/Layout';
-import { AuthProvider } from '../context/states/authContext';
+import Axios from "axios";
+import cookie from "cookie";
+import jwt_decode from "jwt-decode";
+import App from "next/app";
+import React from "react";
+import "../App.css";
+import Layout from "../components/Layout";
+import { AuthProvider } from "../context/states/authContext";
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -24,7 +24,7 @@ MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
 
   const { token } = cookie.parse(
-    ctx.req ? ctx.req.headers.cookie || '' : document.cookie,
+    ctx.req ? ctx.req.headers.cookie || "" : document.cookie
   );
 
   const redirectUser = (ctx, location) => {
@@ -39,10 +39,11 @@ MyApp.getInitialProps = async (appContext) => {
   if (token) {
     try {
       const { data } = await Axios.get(
-        'http://localhost:3000/api/users/current',
+        "http://localhost:3000/api/users/current" ||
+          `https://devconnector-next-react-router.vercel.app/api/users/current`,
         {
           headers: { Authorization: token },
-        },
+        }
       );
       const decode = jwt_decode(token);
       // const currentTime = Date.now() / 1000;
@@ -60,18 +61,18 @@ MyApp.getInitialProps = async (appContext) => {
     }
   } else {
     const protectRoute =
-      ctx.pathname === '/users' ||
-      ctx.pathname === '/createProfile' ||
-      ctx.pathname === '/editProfile' ||
-      ctx.pathname === '/addEducation' ||
-      ctx.pathname === '/addExperience' ||
-      ctx.pathname === '/profile' ||
-      ctx.pathname === '/profiles' ||
-      ctx.pathname === '/posts' ||
-      ctx.pathname === '/post';
+      ctx.pathname === "/users" ||
+      ctx.pathname === "/createProfile" ||
+      ctx.pathname === "/editProfile" ||
+      ctx.pathname === "/addEducation" ||
+      ctx.pathname === "/addExperience" ||
+      ctx.pathname === "/profile" ||
+      ctx.pathname === "/profiles" ||
+      ctx.pathname === "/posts" ||
+      ctx.pathname === "/post";
 
     if (protectRoute) {
-      redirectUser(ctx, '/login');
+      redirectUser(ctx, "/login");
     }
   }
   return { ...appProps };
