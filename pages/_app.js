@@ -6,6 +6,8 @@ import React from "react";
 import "../App.css";
 import Layout from "../components/Layout";
 import { AuthProvider } from "../context/states/authContext";
+import baseUrl from "../utils/baseurl";
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -38,13 +40,9 @@ MyApp.getInitialProps = async (appContext) => {
 
   if (token) {
     try {
-      const { data } = await Axios.get(
-        "http://localhost:3000/api/users/current" ||
-          "https://devconector-nextjs.choton654.vercel.app/api/users/current",
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const { data } = await Axios.get(`${baseUrl}/api/users/current`, {
+        headers: { Authorization: token },
+      });
       const decode = jwt_decode(token);
       // const currentTime = Date.now() / 1000;
       // if (decode.exp < currentTime) {
