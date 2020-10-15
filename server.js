@@ -16,7 +16,7 @@ async function start() {
 
   // body parser
   server.use(express.json({ extended: false }));
-  server.use(Cors());
+  // server.use(Cors());
 
   const users = require("./routes/users");
   const posts = require("./routes/posts");
