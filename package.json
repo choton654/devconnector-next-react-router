@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "next build",
     "dev": "nodemon server.js",
-    "dev1": "next",
+    "dev1": "next dev",
     "start": "node server.js -p $PORT",
     "serve": "NODE_ENV=production node server.js",
     "heroku-postbuild": "npm run build"

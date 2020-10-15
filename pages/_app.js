@@ -54,7 +54,7 @@ MyApp.getInitialProps = async (appContext) => {
         appProps.pageProps.authUser = {};
       }
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error);
       // redirectUser(ctx, '/login');
     }
   } else {
